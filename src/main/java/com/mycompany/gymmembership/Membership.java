@@ -11,10 +11,12 @@ package com.mycompany.gymmembership;
 public class Membership {
     private String name;
     private double baseCost;
+    private boolean available;
 
     public Membership(String name, double baseCost) {
         this.name = name;
         this.baseCost = baseCost;
+        this.available = true;
     }
 
     public String getName() {
@@ -23,5 +25,9 @@ public class Membership {
 
     public double getBaseCost() {
         return baseCost;
+    }
+
+    public boolean isAvailable() {
+        return available;
     }
 }

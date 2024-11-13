@@ -30,11 +30,20 @@ public class GymMembership {
         // 1. Selección de Membresía: Mostrar opciones y permitir al usuario elegir una membresía
         System.out.println("Please choose a membership plan:");
         for (int i = 0; i < memberships.size(); i++) {
-            System.out.println((i + 1) + ". " + memberships.get(i).getName() + " - $" + memberships.get(i).getBaseCost());
+            if (memberships.get(i).isAvailable())
+                System.out.println((i + 1) + ". " + memberships.get(i).getName() + " - $" + memberships.get(i).getBaseCost());
         }
 
-        int choice = scanner.nextInt();
-        Membership selectedMembership = memberships.get(choice - 1);  // Obtener la membresía seleccionada
+        int choice;
+        Membership selectedMembership;
+        do {
+            choice = scanner.nextInt();
+            selectedMembership = memberships.get(choice - 1);
+            if (!selectedMembership.isAvailable()) {
+                System.out.println("The selected membership is not available. Please choose a different one.");
+            }
+        } while (!selectedMembership.isAvailable());
+        selectedMembership = memberships.get(choice - 1);  // Obtener la membresía seleccionada
 
         // Mostrar la membresía seleccionada
         System.out.println("You selected: " + selectedMembership.getName());
@@ -46,6 +55,12 @@ public class GymMembership {
 
         // Crear un plan de membresía con las características seleccionadas
         MembershipPlan membershipPlan = new MembershipPlan(selectedMembership, features);
+        for (Feature feature : features) {
+            if (!feature.isAvailable()) {
+                System.out.println("Feature " + feature.getName() + " is not available. Please choose a different feature.");
+                features.remove(feature); // Remover características no disponibles
+            }
+        }
         List<MembershipPlan> membershipPlanList = new ArrayList<>();
 
         boolean multipleSignup = false;
@@ -81,6 +96,22 @@ public class GymMembership {
             finalCost *= 0.9;
         }
         System.out.println("Final cost after discounts: $" + finalCost);
+        System.out.println("\n--- Membership Plan Summary ---");
+        System.out.println("Membership Type: " + selectedMembership.getName());
+        System.out.println("Base Cost: $" + selectedMembership.getBaseCost());
+        System.out.println("Additional Features:");
+        for (Feature feature : features) {
+            System.out.println("- " + feature.getName() + " ($" + feature.getCost() + ")");
+        }
+        System.out.println("Total Cost (with discounts): $" + finalCost);
+
+        System.out.print("\nDo you want to confirm this membership plan? (yes/no): ");
+        String confirmation = scanner.next();
+        if (confirmation.equalsIgnoreCase("yes")) {
+            System.out.println("Membership plan confirmed! Thank you for signing up.");
+        } else {
+            System.out.println("Membership plan canceled. Please make your selections again.");
+        }
         scanner.close();
     }
 
@@ -92,17 +123,26 @@ public class GymMembership {
             System.out.println("Do you want to add any additional features?");
             System.out.println("1. Personal Training - $30");
             System.out.println("2. Group Classes - $20");
-            System.out.println("3. No more features");
+            System.out.println("3. Access to exclusive gym facilities - $50");
+            System.out.println("4. Specialized Training Programs - $100");
+            System.out.println("5. No more features");
 
             int featureChoice = scanner.nextInt();
-            if (featureChoice == 1) {
-                featureList.add(new Feature("Personal Training", 30));
-            } else if (featureChoice == 2) {
-                featureList.add(new Feature("Group Classes", 20));
-            } else if (featureChoice == 3) {
-                addMore = false;  // Terminar el bucle
+            Feature selectedFeature = null;
+            switch (featureChoice) {
+                case 1 -> selectedFeature = new Feature("Personal Training", 30);
+                case 2 -> selectedFeature = new Feature("Group Classes", 20);
+                case 3 -> selectedFeature = new Feature("Access to exclusive gym facilities", 50);
+                case 4 -> selectedFeature = new Feature("Specialized Training Programs", 100);
+                case 5 -> addMore = false;
+                default -> System.out.println("Invalid choice. Please try again.");
             }
-
+    
+            if (selectedFeature != null && selectedFeature.isAvailable()) {
+                featureList.add(selectedFeature);
+            } else if (selectedFeature != null) {
+                System.out.println("The selected feature is not available. Please choose a different one.");
+            }
             if (addMore) {
                 System.out.println("Would you like to add another feature? (yes/no)");
                 String response = scanner.next();

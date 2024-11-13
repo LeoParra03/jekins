@@ -14,10 +14,12 @@ public class MembershipPlan {
     private Membership membership;
     private List<Feature> features;
     private double totalCost;
+    private boolean hasPremiumFeatures;
 
     public MembershipPlan(Membership membership, List<Feature> features) {
         this.membership = membership;
         this.features = features;
+        this.hasPremiumFeatures = false;
         this.totalCost = membership.getBaseCost();  // Start with the base membership cost
     }
 
@@ -25,6 +27,8 @@ public class MembershipPlan {
         // 3. Calculate the total membership cost, including additional features
         double featuresCost = 0;
         for (Feature feature : features) {
+            if (feature.getName().equals("Access to exclusive gym facilities") || feature.getName().equals("Specialized Training Programs"))
+                this.hasPremiumFeatures = true;
             featuresCost += feature.getCost();
         }
         totalCost += featuresCost;
@@ -35,6 +39,8 @@ public class MembershipPlan {
         } else if (totalCost > 200) {
             totalCost -= 20;
         }
+        if (this.hasPremiumFeatures)
+            totalCost = totalCost + totalCost*0.15;
     }
 
     public double getTotalCost() {

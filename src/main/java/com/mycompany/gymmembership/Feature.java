@@ -11,10 +11,12 @@ package com.mycompany.gymmembership;
 public class Feature {
     private String name;
     private double cost;
+    private boolean available;
 
     public Feature(String name, double cost) {
         this.name = name;
         this.cost = cost;
+        this.available = true;
     }
 
     public String getName() {
@@ -23,5 +25,9 @@ public class Feature {
 
     public double getCost() {
         return cost;
+    }
+
+    public boolean isAvailable() {
+        return available;
     }
 }
