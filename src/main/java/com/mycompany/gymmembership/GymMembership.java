@@ -59,7 +59,7 @@ public class GymMembership {
             System.out.print("How many people would you like to sign up with?: ");
             int amount = scanner.nextInt();
             for (int i = 0; i < amount; i++) {
-                System.out.println("Additional Membership #" + i + 1);
+                System.out.println("Additional Membership #" + (i + 1));
                 membershipPlanList.add(new MembershipPlan(selectedMembership, addFeatures()));
             }
         }

@@ -30,6 +30,11 @@ public class MembershipPlan {
         totalCost += featuresCost;
 
         System.out.println("Total membership cost (before discounts): $" + totalCost);
+        if (totalCost > 400){
+            totalCost -= 50;
+        } else if (totalCost > 200) {
+            totalCost -= 20;
+        }
     }
 
     public double getTotalCost() {
