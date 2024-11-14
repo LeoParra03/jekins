@@ -1,5 +1,6 @@
 package com.mycompany.gymmembership;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,7 +15,7 @@ public class MembershipPlan {
 
     public MembershipPlan(Membership membership, List<Feature> features) {
         this.membership = membership;
-        this.features = features;
+        this.features = new ArrayList<>(features);
         this.hasPremiumFeatures = false;
         this.totalCost = membership.getBaseCost();  // Start with the base membership cost
     }
@@ -58,5 +59,9 @@ public class MembershipPlan {
     
     public double getTotalCost() {
         return totalCost;
+    }
+
+    public List<Feature> getFeatures() {
+        return features;
     }
 }
