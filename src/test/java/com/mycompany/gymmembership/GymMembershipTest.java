@@ -5,31 +5,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class GymMembershipTest {
 
-	private Membership basicMembership;
-	private Membership premiumMembership;
-	private Membership familyMembership;
+	private Membership basicMembership = new Membership("Basic", 50);
+	private Membership premiumMembership = new Membership("Premium", 100);
+	private Membership familyMembership = new Membership("Family", 150);
 
-	private Feature personalTraining;
-	private Feature groupClasses;
-	private Feature exclusiveFacilities;
-	private Feature specializedTraining;
-
-	@BeforeEach
-	public void setUp() {
-		basicMembership = new Membership("Basic", 50);
-		premiumMembership = new Membership("Premium", 100);
-		familyMembership = new Membership("Family", 150);
-
-		personalTraining = new Feature("Personal Training", 30);
-		groupClasses = new Feature("Group Classes", 20);
-		exclusiveFacilities = new Feature("Access to exclusive gym facilities", 50);
-		specializedTraining = new Feature("Specialized Training Programs", 100);
-	}
+	private Feature personalTraining = new Feature("Personal Training", 30);
+	private Feature groupClasses = new Feature("Group Classes", 20);
+	private Feature exclusiveFacilities = new Feature("Access to exclusive gym facilities", 50);
+	private Feature specializedTraining = new Feature("Specialized Training Programs", 100);
 
 	@Test
 	public void testMembershipAvailability() {
