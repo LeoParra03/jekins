@@ -19,6 +19,12 @@ public class Feature {
         this.available = true;
     }
 
+	public Feature(String name, double cost, boolean available) {
+		this.name = name;
+		this.cost = cost;
+		this.available = available;
+	}
+
     public String getName() {
         return name;
     }

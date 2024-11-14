@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.gymmembership;
 
 import java.util.List;
@@ -24,25 +20,42 @@ public class MembershipPlan {
     }
 
     public void calculateTotalCost() {
-        // 3. Calculate the total membership cost, including additional features
-        double featuresCost = 0;
-        for (Feature feature : features) {
-            if (feature.getName().equals("Access to exclusive gym facilities") || feature.getName().equals("Specialized Training Programs"))
-                this.hasPremiumFeatures = true;
-            featuresCost += feature.getCost();
-        }
-        totalCost += featuresCost;
-
-        System.out.println("Total membership cost (before discounts): $" + totalCost);
-        if (totalCost > 400){
-            totalCost -= 50;
-        } else if (totalCost > 200) {
-            totalCost -= 20;
-        }
-        if (this.hasPremiumFeatures)
-            totalCost = totalCost + totalCost*0.15;
+		calculateTotalCostWithDiscount();
+		applyDiscounts();
     }
 
+	public void calculateTotalCostWithDiscount() {
+		// 3. Calculate the total membership cost, including additional features
+		double featuresCost = 0;
+		for (Feature feature : features) {
+			if (feature.getName().equals("Access to exclusive gym facilities")
+					|| feature.getName().equals("Specialized Training Programs"))
+				this.hasPremiumFeatures = true;
+			featuresCost += feature.getCost();
+		}
+		totalCost += featuresCost;
+
+		System.out.println("Total membership cost (before discounts): $" + totalCost);
+	}
+
+	public void applyDiscounts() {
+		if (totalCost > 400) {
+			totalCost -= 50;
+		} else if (totalCost > 200) {
+			totalCost -= 20;
+		}
+		if (this.hasPremiumFeatures)
+			totalCost = totalCost + totalCost * 0.15;
+	}
+
+	public Membership getMembership() {
+		return membership;
+	}
+
+	public List<Feature> getFeatures() {
+		return features;
+	}
+    
     public double getTotalCost() {
         return totalCost;
     }

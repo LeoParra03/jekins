@@ -19,6 +19,12 @@ public class Membership {
         this.available = true;
     }
 
+	public Membership(String name, double baseCost, boolean available) {
+		this.name = name;
+		this.baseCost = baseCost;
+		this.available = available;
+	}
+
     public String getName() {
         return name;
     }

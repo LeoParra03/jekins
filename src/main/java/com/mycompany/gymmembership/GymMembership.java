@@ -7,6 +7,7 @@ package com.mycompany.gymmembership;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -37,7 +38,7 @@ public class GymMembership {
         int choice;
         Membership selectedMembership;
         do {
-            choice = scanner.nextInt();
+            choice = safelyGetIntInput();
             selectedMembership = memberships.get(choice - 1);
             if (!selectedMembership.isAvailable()) {
                 System.out.println("The selected membership is not available. Please choose a different one.");
@@ -66,13 +67,12 @@ public class GymMembership {
         boolean multipleSignup = false;
         System.out.println("There is a 10% discount for all memberships if you sign up with multiple people for the same one");
         System.out.print("Would you like to sign up with other people? (yes/no): ");
-        String multipleSignupChoice = scanner.next();
-        multipleSignup = multipleSignupChoice.equalsIgnoreCase("yes");
+        multipleSignup = safelyGetYesNoInput();
 
         if (multipleSignup){
             membershipPlanList.add(membershipPlan);
             System.out.print("How many people would you like to sign up with?: ");
-            int amount = scanner.nextInt();
+            int amount = safelyGetIntInput();
             for (int i = 0; i < amount; i++) {
                 System.out.println("Additional Membership #" + (i + 1));
                 membershipPlanList.add(new MembershipPlan(selectedMembership, addFeatures()));
@@ -103,15 +103,16 @@ public class GymMembership {
         for (Feature feature : features) {
             System.out.println("- " + feature.getName() + " ($" + feature.getCost() + ")");
         }
-        System.out.println("Total Cost (with discounts): $" + finalCost);
 
         System.out.print("\nDo you want to confirm this membership plan? (yes/no): ");
-        String confirmation = scanner.next();
-        if (confirmation.equalsIgnoreCase("yes")) {
+        boolean confirmation = safelyGetYesNoInput();
+        if (confirmation) {
             System.out.println("Membership plan confirmed! Thank you for signing up.");
         } else {
             System.out.println("Membership plan canceled. Please make your selections again.");
+            finalCost = -1;
         }
+        System.out.println("Total Cost (with discounts): $" + finalCost);
         scanner.close();
     }
 
@@ -127,7 +128,7 @@ public class GymMembership {
             System.out.println("4. Specialized Training Programs - $100");
             System.out.println("5. No more features");
 
-            int featureChoice = scanner.nextInt();
+            int featureChoice = safelyGetIntInput();
             Feature selectedFeature = null;
             switch (featureChoice) {
                 case 1 -> selectedFeature = new Feature("Personal Training", 30);
@@ -145,10 +146,43 @@ public class GymMembership {
             }
             if (addMore) {
                 System.out.println("Would you like to add another feature? (yes/no)");
-                String response = scanner.next();
-                addMore = response.equalsIgnoreCase("yes");
+                addMore = safelyGetYesNoInput();
             }
         }
         return featureList;
     }
+
+	private static int safelyGetIntInput() {
+        int input = 0;
+        boolean validInput = false;
+        while (!validInput) {
+            try {
+                input = scanner.nextInt();
+                validInput = true;
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.next();
+            }
+        }
+        return input;
+    }
+
+	// method for get yes/no input
+	private static boolean safelyGetYesNoInput() {
+		boolean validInput = false;
+		boolean response = false;
+		while (!validInput) {
+			String input = scanner.next();
+			if (input.equalsIgnoreCase("yes")) {
+				response = true;
+				validInput = true;
+			} else if (input.equalsIgnoreCase("no")) {
+				response = false;
+				validInput = true;
+			} else {
+				System.out.println("Invalid input. Please enter 'yes' or 'no'.");
+			}
+		}
+		return response;
+	}
 }
