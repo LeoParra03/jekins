@@ -5,10 +5,7 @@
 
 package com.mycompany.gymmembership;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * @author leo
@@ -19,9 +16,9 @@ public class GymMembership {
 
     // Lista de tipos de membresía disponibles
     private static final List<Membership> memberships = Arrays.asList(
-        new Membership("Basic", 50),
-        new Membership("Premium", 100),
-        new Membership("Family", 150)
+            new Membership("Basic", 50),
+            new Membership("Premium", 100),
+            new Membership("Family", 150)
     );
 
     public static void main(String[] args) {
@@ -52,7 +49,6 @@ public class GymMembership {
 
         List<Feature> features = new ArrayList<>(addFeatures());
 
-
         // Crear un plan de membresía con las características seleccionadas
         MembershipPlan membershipPlan = new MembershipPlan(selectedMembership, features);
         for (Feature feature : features) {
@@ -69,13 +65,15 @@ public class GymMembership {
         String multipleSignupChoice = scanner.next();
         multipleSignup = multipleSignupChoice.equalsIgnoreCase("yes");
 
-        if (multipleSignup){
+        if (multipleSignup) {
             membershipPlanList.add(membershipPlan);
             System.out.print("How many people would you like to sign up with?: ");
             int amount = scanner.nextInt();
             for (int i = 0; i < amount; i++) {
                 System.out.println("Additional Membership #" + (i + 1));
-                membershipPlanList.add(new MembershipPlan(selectedMembership, addFeatures()));
+                MembershipPlan addedMembershipPlan = new MembershipPlan(selectedMembership, addFeatures());
+                membershipPlanList.add(addedMembershipPlan);
+                features.addAll(addedMembershipPlan.getFeatures());
             }
         }
 
@@ -88,7 +86,7 @@ public class GymMembership {
             // Mostrar el costo después de los descuentos y recargos
             finalCost = membershipPlan.getTotalCost();
         } else {
-            for (MembershipPlan currentMembershipPlan: membershipPlanList){
+            for (MembershipPlan currentMembershipPlan : membershipPlanList) {
                 currentMembershipPlan.calculateTotalCost();
                 finalCost += currentMembershipPlan.getTotalCost();
             }
@@ -99,9 +97,20 @@ public class GymMembership {
         System.out.println("\n--- Membership Plan Summary ---");
         System.out.println("Membership Type: " + selectedMembership.getName());
         System.out.println("Base Cost: $" + selectedMembership.getBaseCost());
+        if (multipleSignup) System.out.println("Members: " + membershipPlanList.size());
         System.out.println("Additional Features:");
+        Map<String, Integer> featureCounter = new HashMap<>();
+        List<Feature> distinctFeatures = new ArrayList<>();
         for (Feature feature : features) {
-            System.out.println("- " + feature.getName() + " ($" + feature.getCost() + ")");
+            featureCounter.put(feature.getName(), featureCounter.getOrDefault(feature.getName(), 0) + 1);
+            int counter = featureCounter.get(feature.getName());
+            if (counter <= 1){
+                distinctFeatures.add(feature);
+            }
+        }
+
+        for (Feature feature: distinctFeatures){
+            System.out.println("- " + featureCounter.get(feature.getName()) + " " + feature.getName() + " ($" + feature.getCost() + ")");
         }
         System.out.println("Total Cost (with discounts): $" + finalCost);
 
@@ -115,7 +124,7 @@ public class GymMembership {
         scanner.close();
     }
 
-    private static List<Feature> addFeatures(){
+    private static List<Feature> addFeatures() {
         List<Feature> featureList = new ArrayList<>();
         boolean addMore = true;
 
@@ -137,7 +146,7 @@ public class GymMembership {
                 case 5 -> addMore = false;
                 default -> System.out.println("Invalid choice. Please try again.");
             }
-    
+
             if (selectedFeature != null && selectedFeature.isAvailable()) {
                 featureList.add(selectedFeature);
             } else if (selectedFeature != null) {
