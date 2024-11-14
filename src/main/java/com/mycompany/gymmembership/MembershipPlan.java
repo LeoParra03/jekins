@@ -60,8 +60,4 @@ public class MembershipPlan {
     public double getTotalCost() {
         return totalCost;
     }
-
-    public List<Feature> getFeatures() {
-        return features;
-    }
 }
